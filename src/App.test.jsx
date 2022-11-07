@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { SelectWallets, SelectYears } from "./App";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
+import { SelectMonths, SelectWallets, SelectYears } from "./App";
 
 describe("test SelectWallets component", () => {
   it("should not render when no wallet is passed", () => {
@@ -42,5 +43,25 @@ describe("test SelectYears component", () => {
     render(<SelectYears years={[2022, 2023]} />);
     expect(screen.queryByRole("region")).toHaveTextContent("2022");
     expect(screen.queryByRole("region")).toHaveTextContent("2023");
+  });
+});
+
+describe("test months component", () => {
+  it("should render only if years is selected", () => {
+    function Wrapper() {
+      const [selectedYear, setSelectedYear] = useState("");
+
+      return (
+        <>
+          <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
+          <SelectMonths selectedYear={selectedYear} />
+        </>
+      );
+    }
+
+    render(<Wrapper />);
+    expect(screen.queryByText("JAN")).toBeNull();
+    fireEvent.click(screen.getByText("2022"));
+    expect(screen.getByText("JAN")).toBeInTheDocument();
   });
 });

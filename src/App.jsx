@@ -64,19 +64,34 @@ export function SelectWallets({ wallets }) {
   } else return <></>;
 }
 
-export function SelectYears(props) {
-  return !props.years ? (
+export function SelectYears({ years, selectYear }) {
+  if (years) {
+    return years.length > 1 ? (
+      <section class="years" role="region">
+        {years.map((year) => (
+          <a onClick={() => selectYear(year)}>{year}</a>
+        ))}
+      </section>
+    ) : null;
+  }
+
+  return (
     <section class="years" role="region">
       <p>
         Você ainda não tem dados. Por favor, crie uma nova transação ou carregue
         dados.
       </p>
     </section>
-  ) : props.years.length > 1 ? (
-    <section class="years" role="region">
-      {props.years.map((year) => (
-        <a href="#">{year}</a>
-      ))}
+  );
+}
+
+export function SelectMonths({ selectedYear }) {
+  return selectedYear ? (
+    <section class="months">
+      <a href="#">JAN</a> <a href="#">FEV</a> <a href="#">MAR</a>{" "}
+      <a href="#">ABR</a> <a href="#">MAI</a> <a href="#">JUN</a>{" "}
+      <a href="#">JUL</a> <a href="#">AGO</a> <a href="#">SET</a>{" "}
+      <a href="#">OUT</a> <a href="#">NOV</a> <a href="#">DEZ</a>
     </section>
   ) : null;
 }
@@ -86,12 +101,7 @@ function SelectionOptions() {
     <nav>
       <SelectWallets />
       <SelectYears />
-      <section class="months">
-        <a href="#">JAN</a> <a href="#">FEV</a> <a href="#">MAR</a>{" "}
-        <a href="#">ABR</a> <a href="#">MAI</a> <a href="#">JUN</a>{" "}
-        <a href="#">JUL</a> <a href="#">AGO</a> <a href="#">SET</a>{" "}
-        <a href="#">OUT</a> <a href="#">NOV</a> <a href="#">DEZ</a>
-      </section>
+      <selectedYear />
     </nav>
   );
 }
