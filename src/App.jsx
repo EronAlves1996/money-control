@@ -65,24 +65,21 @@ export function SelectWallets({ wallets }) {
 }
 
 export function SelectYears({ years, selectYear }) {
-  if (years) {
-    return years.length > 1 ? (
-      <section class="years" role="region">
-        {years.map((year) => (
-          <a onClick={() => selectYear(year)}>{year}</a>
-        ))}
-      </section>
-    ) : null;
-  }
-
-  return (
-    <section class="years" role="region">
+  const mapYears =
+    years && years.length > 1 ? (
+      years.map((year) => <a onClick={() => selectYear(year)}>{year}</a>)
+    ) : (
       <p>
         Você ainda não tem dados. Por favor, crie uma nova transação ou carregue
         dados.
       </p>
+    );
+
+  return !years || years.length !== 1 ? (
+    <section class="years" role="region">
+      {mapYears}
     </section>
-  );
+  ) : null;
 }
 
 export function SelectMonths({ selectedYear }) {
