@@ -49,20 +49,25 @@ function MovimentationTable() {
   );
 }
 
+export function SelectWallets({ wallets }) {
+  if (wallets && wallets.length > 1) {
+    return (
+      <section class="counts">
+        {wallets.map((wallet) => (
+          <label htmlFor={wallet} key={wallet}>
+            <input type="checkbox" />
+            {wallet}
+          </label>
+        ))}
+      </section>
+    );
+  } else return <></>;
+}
+
 function SelectionOptions() {
   return (
     <nav>
-      <section class="counts">
-        <label htmlFor="">
-          <input type="checkbox" /> Conta 1
-        </label>
-        <label htmlFor="">
-          <input type="checkbox" /> Conta 2
-        </label>
-        <label htmlFor="">
-          <input type="checkbox" /> Conta 3
-        </label>
-      </section>
+      <SelectWallets />
       <section class="years">
         <a href="#">2020</a> <a href="#">2021</a> <a href="#">2022</a>
       </section>
