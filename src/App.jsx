@@ -76,6 +76,30 @@ function SelectionOptions() {
   );
 }
 
+const DATA = [
+  {
+    date: new Date(),
+    wallet: "Banco do Brasil",
+    description: "Bala Halls",
+    type: "Gasto diverso",
+    value: -2.0,
+  },
+  {
+    date: new Date(),
+    wallet: "Banco do Brasil",
+    description: "Garrafa",
+    type: "Trabalho",
+    value: -15.0,
+  },
+  {
+    date: new Date(),
+    wallet: "Banco do Brasil",
+    description: "Ring Light",
+    type: "Trabalho",
+    value: -125.0,
+  },
+];
+
 function Main() {
   return (
     <main>
