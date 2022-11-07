@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import App, { SelectWallets } from "./App";
+import { SelectWallets, SelectYears } from "./App";
 
 describe("test SelectWallets component", () => {
   it("should not render when no wallet is passed", () => {
@@ -20,5 +20,27 @@ describe("test SelectWallets component", () => {
     const el2 = screen.queryByText("Santander");
     expect(el.textContent).toBe("Banco do Brasil");
     expect(el2.textContent).toBe("Santander");
+  });
+});
+
+describe("test SelectYears component", () => {
+  it("should detect if it has data", () => {
+    render(<SelectYears />);
+    expect(
+      screen.getByText(
+        "Você ainda não tem dados. Por favor, crie uma nova transação ou carregue dados."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("should not render any year if it has only one year", () => {
+    render(<SelectYears years={[2022]} />);
+    expect(screen.queryByRole("region")).toBe(null);
+  });
+
+  it("should render all years passed", () => {
+    render(<SelectYears years={[2022, 2023]} />);
+    expect(screen.queryByRole("region")).toHaveTextContent("2022");
+    expect(screen.queryByRole("region")).toHaveTextContent("2023");
   });
 });

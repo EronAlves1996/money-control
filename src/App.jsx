@@ -64,13 +64,28 @@ export function SelectWallets({ wallets }) {
   } else return <></>;
 }
 
+export function SelectYears(props) {
+  return !props.years ? (
+    <section class="years" role="region">
+      <p>
+        Você ainda não tem dados. Por favor, crie uma nova transação ou carregue
+        dados.
+      </p>
+    </section>
+  ) : props.years.length > 1 ? (
+    <section class="years" role="region">
+      {props.years.map((year) => (
+        <a href="#">{year}</a>
+      ))}
+    </section>
+  ) : null;
+}
+
 function SelectionOptions() {
   return (
     <nav>
       <SelectWallets />
-      <section class="years">
-        <a href="#">2020</a> <a href="#">2021</a> <a href="#">2022</a>
-      </section>
+      <SelectYears />
       <section class="months">
         <a href="#">JAN</a> <a href="#">FEV</a> <a href="#">MAR</a>{" "}
         <a href="#">ABR</a> <a href="#">MAI</a> <a href="#">JUN</a>{" "}
