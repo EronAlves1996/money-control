@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { SelectionOptions } from "./NavbarUtils";
 
 function MovimentationTable() {
   return (
@@ -50,73 +51,7 @@ function MovimentationTable() {
   );
 }
 
-export function SelectWallets({ wallets, setWallets }) {
-  if (wallets && wallets.length > 1) {
-    return (
-      <section className="counts" data-testid="wallets">
-        {wallets.map((wallet) => (
-          <label htmlFor={wallet.wallet} key={wallet.wallet}>
-            <input
-              type="checkbox"
-              checked={wallet.checked}
-              onChange={(e) => {
-                const walletsTemp = [...wallets];
-                walletsTemp[
-                  walletsTemp.findIndex((w) => w.wallet === wallet)
-                ].checked = e.target.checked;
-                setWallets(walletsTemp);
-              }}
-            />
-            {wallet.wallet}
-          </label>
-        ))}
-      </section>
-    );
-  } else return <></>;
-}
-
-export function SelectYears({ years, selectYear }) {
-  const mapYears =
-    years && years.length > 1 ? (
-      years.map((year) => <a onClick={() => selectYear(year)}>{year}</a>)
-    ) : (
-      <p>
-        Você ainda não tem dados. Por favor, crie uma nova transação ou carregue
-        dados.
-      </p>
-    );
-
-  return !years || years.length !== 1 ? (
-    <section className="years" role="region">
-      {mapYears}
-    </section>
-  ) : null;
-}
-
-export function SelectMonths({ selectedYear, months }) {
-  return selectedYear && months.length > 1 ? (
-    <section className="months">
-      {months.map((month) => (
-        <a>{month}</a>
-      ))}
-    </section>
-  ) : null;
-}
-
-function SelectionOptions({ walletsOpts }) {
-  return (
-    <nav>
-      <SelectWallets
-        wallets={walletsOpts.wallets}
-        setWallets={walletsOpts.setWallets}
-      />
-      <SelectYears />
-      <selectedYear />
-    </nav>
-  );
-}
-
-function Main() {
+function parseData(data) {
   const MONTHS = [
     "JAN",
     "FEV",
@@ -130,6 +65,32 @@ function Main() {
     "NOV",
     "DEZ",
   ];
+  return data.reduce(
+    (acc, trans) => {
+      const wallet = trans.wallet;
+      const date = new Date(trans.date);
+      const year = date.getYear();
+      const month = MONTHS[date.getMonth()];
+
+      if (!acc.wallets.some((w) => w === wallet)) {
+        acc.wallets.push(wallet);
+      }
+
+      if (!acc.years.some((y) => y === year)) {
+        acc.years.push(year);
+      }
+
+      if (!acc.months.some((m) => m === month)) {
+        acc.months.push(month);
+      }
+
+      return acc;
+    },
+    { wallets: [], years: [], months: [] }
+  );
+}
+
+function Main() {
   const [isHaveFile, setIsHaveFile] = useState(false);
   const [wallets, setWallets] = useState([]);
   const [years, setYears] = useState([]);
@@ -139,39 +100,23 @@ function Main() {
     file
       .text()
       .then((transactions) => JSON.parse(transactions))
-      .then((res) =>
-        res.reduce(
-          (acc, trans) => {
-            const wallet = trans.wallet;
-            const date = new Date(trans.date);
-            const year = date.getYear();
-            const month = MONTHS[date.getMonth()];
-
-            if (!acc.wallets.some((w) => w === wallet)) {
-              acc.wallets.push(wallet);
-            }
-
-            if (!acc.years.some((y) => y === year)) {
-              acc.years.push(year);
-            }
-
-            if (!acc.months.some((m) => m === month)) {
-              acc.months.push(month);
-            }
-
-            return acc;
-          },
-          { wallets: [], years: [], months: [] }
-        )
-      )
+      .then((res) => parseData(res))
       .then((result) => {
         setWallets(
           result.wallets.map((wallet) => {
             return { wallet, checked: false };
           })
         );
-        setYears(result.years);
-        setMonths(result.months);
+        setYears(
+          result.years.map((year) => {
+            return { year, selected: false };
+          })
+        );
+        setMonths(
+          result.months.map((month) => {
+            return { month, selected: false };
+          })
+        );
       });
   }
 
@@ -181,9 +126,13 @@ function Main() {
         <>
           <header>
             <h3>Movimentações</h3>
-            <SelectionOptions walletsOpts={{ wallets, setWallets }} />
+            <SelectionOptions
+              walletsOpts={{ wallets, setWallets }}
+              yearOpts={{ years, setYears }}
+              monthOpts={{ months, setMonths }}
+            />
           </header>
-          <MovimentationTable wallets={wallets} />
+          <MovimentationTable wallets={wallets} years={years} months={months} />
         </>
       ) : (
         <>
