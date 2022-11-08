@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import App from "./App";
-import { SelectMonths, SelectWallets, SelectYears } from "./NavbarUtils";
+import { SelectMonths, SelectWallets, SelectYears } from "./SelectionOptions";
 
 describe("test SelectWallets component", () => {
   it("should not render when no wallet is passed", () => {

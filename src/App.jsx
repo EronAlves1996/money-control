@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { SelectionOptions } from "./NavbarUtils";
+import { SelectionOptions } from "./SelectionOptions";
 
 function MovimentationTable() {
   return (
@@ -76,7 +76,7 @@ function Main() {
   const [isHaveFile, setIsHaveFile] = useState(false);
   const [wallets, setWallets] = useState([]);
   const [years, setYears] = useState([]);
-  const [months, setMonths] = useState([]);
+  const [months, setMonths] = useState(null);
   const [data, setData] = useState({});
 
   function parseFile(file) {
