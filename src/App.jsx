@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 
 function MovimentationTable() {
@@ -49,14 +50,24 @@ function MovimentationTable() {
   );
 }
 
-export function SelectWallets({ wallets }) {
+export function SelectWallets({ wallets, setWallets }) {
   if (wallets && wallets.length > 1) {
     return (
-      <section class="counts">
+      <section className="counts" data-testid="wallets">
         {wallets.map((wallet) => (
-          <label htmlFor={wallet} key={wallet}>
-            <input type="checkbox" />
-            {wallet}
+          <label htmlFor={wallet.wallet} key={wallet.wallet}>
+            <input
+              type="checkbox"
+              checked={wallet.checked}
+              onChange={(e) => {
+                const walletsTemp = [...wallets];
+                walletsTemp[
+                  walletsTemp.findIndex((w) => w.wallet === wallet)
+                ].checked = e.target.checked;
+                setWallets(walletsTemp);
+              }}
+            />
+            {wallet.wallet}
           </label>
         ))}
       </section>
@@ -76,7 +87,7 @@ export function SelectYears({ years, selectYear }) {
     );
 
   return !years || years.length !== 1 ? (
-    <section class="years" role="region">
+    <section className="years" role="region">
       {mapYears}
     </section>
   ) : null;
@@ -84,7 +95,7 @@ export function SelectYears({ years, selectYear }) {
 
 export function SelectMonths({ selectedYear, months }) {
   return selectedYear && months.length > 1 ? (
-    <section class="months">
+    <section className="months">
       {months.map((month) => (
         <a>{month}</a>
       ))}
@@ -92,48 +103,113 @@ export function SelectMonths({ selectedYear, months }) {
   ) : null;
 }
 
-function SelectionOptions() {
+function SelectionOptions({ walletsOpts }) {
   return (
     <nav>
-      <SelectWallets />
+      <SelectWallets
+        wallets={walletsOpts.wallets}
+        setWallets={walletsOpts.setWallets}
+      />
       <SelectYears />
       <selectedYear />
     </nav>
   );
 }
 
-const DATA = [
-  {
-    date: new Date(),
-    wallet: "Banco do Brasil",
-    description: "Bala Halls",
-    type: "Gasto diverso",
-    value: -2.0,
-  },
-  {
-    date: new Date(),
-    wallet: "Banco do Brasil",
-    description: "Garrafa",
-    type: "Trabalho",
-    value: -15.0,
-  },
-  {
-    date: new Date(),
-    wallet: "Banco do Brasil",
-    description: "Ring Light",
-    type: "Trabalho",
-    value: -125.0,
-  },
-];
-
 function Main() {
+  const MONTHS = [
+    "JAN",
+    "FEV",
+    "MAR",
+    "ABR",
+    "MAI",
+    "JUN",
+    "AGO",
+    "SET",
+    "OUT",
+    "NOV",
+    "DEZ",
+  ];
+  const [isHaveFile, setIsHaveFile] = useState(false);
+  const [wallets, setWallets] = useState([]);
+  const [years, setYears] = useState([]);
+  const [months, setMonths] = useState([]);
+
+  function parseFile(file) {
+    file
+      .text()
+      .then((transactions) => JSON.parse(transactions))
+      .then((res) =>
+        res.reduce(
+          (acc, trans) => {
+            const wallet = trans.wallet;
+            const date = new Date(trans.date);
+            const year = date.getYear();
+            const month = MONTHS[date.getMonth()];
+
+            if (!acc.wallets.some((w) => w === wallet)) {
+              acc.wallets.push(wallet);
+            }
+
+            if (!acc.years.some((y) => y === year)) {
+              acc.years.push(year);
+            }
+
+            if (!acc.months.some((m) => m === month)) {
+              acc.months.push(month);
+            }
+
+            return acc;
+          },
+          { wallets: [], years: [], months: [] }
+        )
+      )
+      .then((result) => {
+        setWallets(
+          result.wallets.map((wallet) => {
+            return { wallet, checked: false };
+          })
+        );
+        setYears(result.years);
+        setMonths(result.months);
+      });
+  }
+
   return (
     <main>
-      <header>
-        <h3>Movimentações</h3>
-        <SelectionOptions />
-      </header>
-      <MovimentationTable />
+      {isHaveFile ? (
+        <>
+          <header>
+            <h3>Movimentações</h3>
+            <SelectionOptions walletsOpts={{ wallets, setWallets }} />
+          </header>
+          <MovimentationTable wallets={wallets} />
+        </>
+      ) : (
+        <>
+          <header>
+            <h3>Bem vindo!!</h3>
+          </header>
+          <main>
+            <form>
+              <label htmlFor="file-upload">
+                Abrir Arquivo
+                <input
+                  type="file"
+                  name="file-upload"
+                  id="file-upload"
+                  data-testid="file-upload"
+                  onChange={(e) => {
+                    setIsHaveFile(true);
+                    parseFile(e.target.files[0]);
+                  }}
+                />
+              </label>
+            </form>
+            <button>Criar novo extrato</button>
+          </main>
+        </>
+      )}
     </main>
   );
 }

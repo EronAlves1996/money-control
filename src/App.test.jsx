@@ -1,6 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { useState } from "react";
-import { SelectMonths, SelectWallets, SelectYears } from "./App";
+import App, { SelectMonths, SelectWallets, SelectYears } from "./App";
 
 describe("test SelectWallets component", () => {
   it("should not render when no wallet is passed", () => {
@@ -16,7 +22,11 @@ describe("test SelectWallets component", () => {
   });
 
   it("should render when two or more wallets is passed", () => {
-    render(<SelectWallets wallets={["Banco do Brasil", "Santander"]} />);
+    render(
+      <SelectWallets
+        wallets={[{ wallet: "Banco do Brasil" }, { wallet: "Santander" }]}
+      />
+    );
     const el = screen.queryByText("Banco do Brasil");
     const el2 = screen.queryByText("Santander");
     expect(el.textContent).toBe("Banco do Brasil");
@@ -98,5 +108,96 @@ describe("test months component", () => {
     render(<Wrapper />);
     fireEvent.click(screen.getByText("2022"));
     expect(screen.queryByText("JAN")).toBeNull();
+  });
+});
+
+describe("General Integration Test", () => {
+  const DATA = [
+    {
+      date: new Date("2022 10 05"),
+      wallet: "Banco do Brasil",
+      description: "Bala Halls",
+      type: "Gasto diverso",
+      value: -2.0,
+    },
+    {
+      date: new Date("2022 10 03"),
+      wallet: "Banco do Brasil",
+      description: "Garrafa",
+      type: "Trabalho",
+      value: -15.0,
+    },
+    {
+      date: new Date("2022 07 04"),
+      wallet: "Banco do Brasil",
+      description: "Ring Light",
+      type: "Trabalho",
+      value: -125.0,
+    },
+    {
+      date: new Date("2022 04 03"),
+      wallet: "Banco do Brasil",
+      description: "Bala Halls",
+      type: "Gasto diverso",
+      value: -2.0,
+    },
+    {
+      date: new Date("2021 05 23"),
+      wallet: "Banco do Brasil",
+      description: "Garrafa",
+      type: "Trabalho",
+      value: -15.0,
+    },
+    {
+      date: new Date(),
+      wallet: "Santander",
+      description: "Ring Light",
+      type: "Trabalho",
+      value: -125.0,
+    },
+    {
+      date: new Date("2022 03 01"),
+      wallet: "Santander",
+      description: "Bala Halls",
+      type: "Gasto diverso",
+      value: -2.0,
+    },
+    {
+      date: new Date("2021 04 01"),
+      wallet: "Carteira",
+      description: "Garrafa",
+      type: "Trabalho",
+      value: -15.0,
+    },
+    {
+      date: new Date(),
+      wallet: "Carteira",
+      description: "Ring Light",
+      type: "Trabalho",
+      value: -125.0,
+    },
+  ];
+
+  it("should be able to upload some file", async () => {
+    File.prototype.text = jest.fn().mockResolvedValueOnce(JSON.stringify(DATA));
+    render(<App />);
+    const el = screen.getByTestId("file-upload");
+    fireEvent.change(el, {
+      target: {
+        files: [
+          new File(
+            [new Blob([JSON.stringify(DATA)], { type: "application/json" })],
+            "transacoes.json"
+          ),
+        ],
+      },
+    });
+
+    expect(await screen.findByTestId("wallets")).toHaveTextContent(
+      /Santander/i
+    );
+    expect(await screen.findByTestId("wallets")).toHaveTextContent(
+      /Banco do Brasil/i
+    );
   });
 });

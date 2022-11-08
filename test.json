@@ -1,0 +1,65 @@
+[
+  {
+    "date": "2022-10-05T03:00:00.000Z",
+    "wallet": "Banco do Brasil",
+    "description": "Bala Halls",
+    "type": "Gasto diverso",
+    "value": -2
+  },
+  {
+    "date": "2022-10-03T03:00:00.000Z",
+    "wallet": "Banco do Brasil",
+    "description": "Garrafa",
+    "type": "Trabalho",
+    "value": -15
+  },
+  {
+    "date": "2022-07-04T03:00:00.000Z",
+    "wallet": "Banco do Brasil",
+    "description": "Ring Light",
+    "type": "Trabalho",
+    "value": -125
+  },
+  {
+    "date": "2022-04-03T03:00:00.000Z",
+    "wallet": "Banco do Brasil",
+    "description": "Bala Halls",
+    "type": "Gasto diverso",
+    "value": -2
+  },
+  {
+    "date": "2021-05-23T03:00:00.000Z",
+    "wallet": "Banco do Brasil",
+    "description": "Garrafa",
+    "type": "Trabalho",
+    "value": -15
+  },
+  {
+    "date": "2022-11-08T03:42:12.371Z",
+    "wallet": "Santander",
+    "description": "Ring Light",
+    "type": "Trabalho",
+    "value": -125
+  },
+  {
+    "date": "2022-03-01T03:00:00.000Z",
+    "wallet": "Santander",
+    "description": "Bala Halls",
+    "type": "Gasto diverso",
+    "value": -2
+  },
+  {
+    "date": "2021-04-01T03:00:00.000Z",
+    "wallet": "Carteira",
+    "description": "Garrafa",
+    "type": "Trabalho",
+    "value": -15
+  },
+  {
+    "date": "2022-11-08T03:42:12.371Z",
+    "wallet": "Carteira",
+    "description": "Ring Light",
+    "type": "Trabalho",
+    "value": -125
+  }
+]
