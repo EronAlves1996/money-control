@@ -51,26 +51,12 @@ function MovimentationTable() {
   );
 }
 
-function parseData(data) {
-  const MONTHS = [
-    "JAN",
-    "FEV",
-    "MAR",
-    "ABR",
-    "MAI",
-    "JUN",
-    "AGO",
-    "SET",
-    "OUT",
-    "NOV",
-    "DEZ",
-  ];
-  return data.reduce(
+function parseWalletsAndYears(data) {
+  data.reduce(
     (acc, trans) => {
       const wallet = trans.wallet;
       const date = new Date(trans.date);
       const year = date.getYear();
-      const month = MONTHS[date.getMonth()];
 
       if (!acc.wallets.some((w) => w === wallet)) {
         acc.wallets.push(wallet);
@@ -80,13 +66,9 @@ function parseData(data) {
         acc.years.push(year);
       }
 
-      if (!acc.months.some((m) => m === month)) {
-        acc.months.push(month);
-      }
-
       return acc;
     },
-    { wallets: [], years: [], months: [] }
+    { wallets: [], years: [] }
   );
 }
 
@@ -95,29 +77,16 @@ function Main() {
   const [wallets, setWallets] = useState([]);
   const [years, setYears] = useState([]);
   const [months, setMonths] = useState([]);
+  const [data, setData] = useState({});
 
   function parseFile(file) {
-    file
-      .text()
-      .then((transactions) => JSON.parse(transactions))
-      .then((res) => parseData(res))
-      .then((result) => {
-        setWallets(
-          result.wallets.map((wallet) => {
-            return { wallet, checked: false };
-          })
-        );
-        setYears(
-          result.years.map((year) => {
-            return { year, selected: false };
-          })
-        );
-        setMonths(
-          result.months.map((month) => {
-            return { month, selected: false };
-          })
-        );
-      });
+    file.text().then((transactions) => setData(JSON.parse(transactions)));
+  }
+
+  if (data) {
+    const wAY = parseWalletsAndYears(data);
+    setYears(wAY.years);
+    setWallets(wAY.wallets);
   }
 
   return (
@@ -129,11 +98,15 @@ function Main() {
             <SelectionOptions
               walletsOpts={{ wallets, setWallets }}
               yearOpts={{ years, setYears }}
-              monthOpts={{ months, setMonths }}
-              years={years}
+              data={data}
             />
           </header>
-          <MovimentationTable wallets={wallets} years={years} months={months} />
+          <MovimentationTable
+            wallets={wallets}
+            years={years}
+            months={months}
+            data={data}
+          />
         </>
       ) : (
         <>

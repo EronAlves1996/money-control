@@ -66,7 +66,7 @@ export function SelectMonths({ selectedYear, months }) {
   ) : null;
 }
 
-export function SelectionOptions({ walletsOpts, yearOpts }) {
+export function SelectionOptions({ walletsOpts, yearOpts, monthOpts }) {
   return (
     <nav>
       <SelectWallets
@@ -74,7 +74,11 @@ export function SelectionOptions({ walletsOpts, yearOpts }) {
         setWallets={walletsOpts.setWallets}
       />
       <SelectYears years={yearOpts.years} setYears={yearOpts.setYears} />
-      <selectedYear />
+      <selectedYear
+        years={yearOpts.years}
+        months={monthOpts.months}
+        setMonths={monthOpts.setMonths}
+      />
     </nav>
   );
 }
