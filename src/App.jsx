@@ -82,13 +82,12 @@ export function SelectYears({ years, selectYear }) {
   ) : null;
 }
 
-export function SelectMonths({ selectedYear }) {
-  return selectedYear ? (
+export function SelectMonths({ selectedYear, months }) {
+  return selectedYear && months.length > 1 ? (
     <section class="months">
-      <a href="#">JAN</a> <a href="#">FEV</a> <a href="#">MAR</a>{" "}
-      <a href="#">ABR</a> <a href="#">MAI</a> <a href="#">JUN</a>{" "}
-      <a href="#">JUL</a> <a href="#">AGO</a> <a href="#">SET</a>{" "}
-      <a href="#">OUT</a> <a href="#">NOV</a> <a href="#">DEZ</a>
+      {months.map((month) => (
+        <a>{month}</a>
+      ))}
     </section>
   ) : null;
 }

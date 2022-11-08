@@ -54,7 +54,7 @@ describe("test months component", () => {
       return (
         <>
           <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
-          <SelectMonths selectedYear={selectedYear} />
+          <SelectMonths selectedYear={selectedYear} months={["JAN", "FEV"]} />
         </>
       );
     }
@@ -63,5 +63,40 @@ describe("test months component", () => {
     expect(screen.queryByText("JAN")).toBeNull();
     fireEvent.click(screen.getByText("2022"));
     expect(screen.getByText("JAN")).toBeInTheDocument();
+  });
+
+  it("should render only if it has more than 2 months passed", () => {
+    function Wrapper() {
+      const [selectedYear, setSelectedYear] = useState("");
+
+      return (
+        <>
+          <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
+          <SelectMonths selectedYear={selectedYear} months={["JAN", "FEV"]} />
+        </>
+      );
+    }
+
+    render(<Wrapper />);
+    fireEvent.click(screen.getByText("2021"));
+    expect(screen.getByText("JAN")).toBeInTheDocument();
+    expect(screen.queryByText("MAR")).toBeNull();
+  });
+
+  it("should render no month if just one month passed", () => {
+    function Wrapper() {
+      const [selectedYear, setSelectedYear] = useState("");
+
+      return (
+        <>
+          <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
+          <SelectMonths selectedYear={selectedYear} months={["JAN"]} />
+        </>
+      );
+    }
+
+    render(<Wrapper />);
+    fireEvent.click(screen.getByText("2022"));
+    expect(screen.queryByText("JAN")).toBeNull();
   });
 });
