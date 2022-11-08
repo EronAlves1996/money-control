@@ -1,45 +1,11 @@
-import { useEffect } from "react";
 import { SelectWallets } from "./SelectWallets";
 
-export const MONTHS = [
-  "JAN",
-  "FEV",
-  "MAR",
-  "ABR",
-  "MAI",
-  "JUN",
-  "JUL",
-  "AGO",
-  "SET",
-  "OUT",
-  "NOV",
-  "DEZ",
-];
-
-function parseMonths(data, year) {
-  if (!year) return;
-  const monthArr = data.reduce((acc, trans) => {
-    const date = new Date(trans.date);
-    if (date.getFullYear() !== year.year) return acc;
-
-    if (!acc.some((month) => month === MONTHS[date.getMonth()]))
-      acc.push(MONTHS[date.getMonth()]);
-
-    return acc;
-  }, []);
-  return monthArr.map((month) => {
-    return { month, selected: false };
-  });
-}
-
-export function SelectionOptions({ walletsOpts, yearOpts, monthOpts, data }) {
-  const year = yearOpts.years.find((year) => year.selected === true);
-  const parsedMonths = parseMonths(data, year);
-
-  useEffect(() => {
-    monthOpts.setMonths(parsedMonths);
-  }, [year]);
-
+export function SelectionOptions({
+  walletsOpts,
+  yearOpts,
+  monthOpts,
+  callbacks,
+}) {
   return (
     <nav>
       <SelectWallets
@@ -47,36 +13,34 @@ export function SelectionOptions({ walletsOpts, yearOpts, monthOpts, data }) {
         setWallets={walletsOpts.setWallets}
       />
 
-      {yearOpts.years ? <p>Parece que ainda não há dados carregados!</p> : null}
+      {yearOpts.years === null ? (
+        <p>Parece que ainda não há dados carregados!</p>
+      ) : null}
 
-      <SelectXWValidation opts={yearOpts} />
+      <SelectXWValidation opts={yearOpts} callback={callbacks.selectYear} />
 
-      <SelectXWValidation opts={monthOpts} />
+      <SelectXWValidation opts={monthOpts} callback={callbacks.selectMonth} />
     </nav>
   );
 }
 
-function SelectXWValidation({ opts }) {
+function SelectXWValidation({ opts, callback }) {
   const attr = Object.keys(opts).at(0);
 
   return opts[attr] && opts[attr].length !== 1 ? (
-    <SelectX
-      subject={opts[Object.keys(opts).at(0)]}
-      setSubject={opts[Object.keys(opts).at(1)]}
-    />
+    <SelectX subject={opts[Object.keys(opts).at(0)]} callback={callback} />
   ) : null;
 }
 
-function SelectX({ subject, setSubject }) {
+function SelectX({ subject, callback }) {
   const attr = Object.keys(subject[0]).at(0);
-  console.log(subject);
 
   return (
     <section className={attr} role="region" key="1">
       {subject.map((s) => (
         <button
           onClick={() => {
-            setSubject(
+            callback(() =>
               subject.map((sub) =>
                 sub[attr] === s[attr]
                   ? { ...sub, selected: true }
