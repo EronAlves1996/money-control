@@ -1,4 +1,4 @@
-import { MONTHS } from "./SelectMonths";
+import { MONTHS } from "./SelectionOptions";
 
 export function MovimentationTable({ filters, data }) {
   const filteredData = data.filter((d) => {

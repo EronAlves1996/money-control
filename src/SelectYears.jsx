@@ -1,4 +1,4 @@
-export function SelectYears({ years, setYears, setMonths }) {
+export function SelectYears({ years, setYears }) {
   const mapYears =
     years && years.length > 1 ? (
       years.map((year) => (
