@@ -2,21 +2,20 @@ export function SelectYears({ years, setYears, setMonths }) {
   const mapYears =
     years && years.length > 1 ? (
       years.map((year) => (
-        <a
+        <button
           onClick={() => {
             setYears(
               years.map((years) =>
                 years.year === year.year
-                  ? { ...year, selected: true }
+                  ? { ...years, selected: true }
                   : { ...years, selected: false }
               )
             );
-            setMonths(null);
           }}
-          key={years.year}
+          key={year.year.toString()}
         >
           {year.year}
-        </a>
+        </button>
       ))
     ) : (
       <p>
@@ -26,7 +25,7 @@ export function SelectYears({ years, setYears, setMonths }) {
     );
 
   return !years || years.length !== 1 ? (
-    <section className="years" role="region">
+    <section className="years" role="region" key="1">
       {mapYears}
     </section>
   ) : null;

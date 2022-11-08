@@ -12,7 +12,7 @@ export function SelectionOptions({ walletsOpts, yearOpts, monthOpts, data }) {
       <SelectYears
         years={yearOpts.years}
         setYears={yearOpts.setYears}
-        setMonths={monthOpts.setMonthts}
+        setMonths={monthOpts.setMonths}
       />
       <SelectMonths
         years={yearOpts.years}

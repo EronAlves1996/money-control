@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export const MONTHS = [
   "JAN",
   "FEV",
@@ -14,9 +16,10 @@ export const MONTHS = [
 ];
 
 function parseMonths(data, year) {
+  if (!year) return;
   const monthArr = data.reduce((acc, trans) => {
     const date = new Date(trans.date);
-    if (date.getYear() !== year) return acc;
+    if (date.getFullYear() !== year.year) return acc;
 
     if (!acc.some((month) => month === MONTHS[date.getMonth()]))
       acc.push(MONTHS[date.getMonth()]);
@@ -29,21 +32,21 @@ function parseMonths(data, year) {
 }
 
 export function SelectMonths({ years, months, setMonths, data }) {
-  if (!years.some((year) => year.selected === false)) {
-    return null;
-  }
-
   const year = years.find((year) => year.selected === true);
   const parsedMonths = parseMonths(data, year);
 
-  if (!months) {
+  useEffect(() => {
     setMonths(parsedMonths);
+  }, [year]);
+
+  if (!years.some((year) => year.selected === true)) {
+    return null;
   }
 
   return (
     <section className="months" role="region">
       {parsedMonths.map((month) => (
-        <a
+        <button
           onClick={() => {
             setMonths(
               parsedMonths.map((m) => {
@@ -53,9 +56,10 @@ export function SelectMonths({ years, months, setMonths, data }) {
               })
             );
           }}
+          key={month.month}
         >
-          month.month
-        </a>
+          {month.month}
+        </button>
       ))}
     </section>
   );

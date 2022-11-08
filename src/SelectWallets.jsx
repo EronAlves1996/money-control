@@ -10,7 +10,7 @@ export function SelectWallets({ wallets, setWallets }) {
               onChange={(e) => {
                 const walletsTemp = [...wallets];
                 walletsTemp[
-                  walletsTemp.findIndex((w) => w.wallet === wallet)
+                  walletsTemp.findIndex((w) => w.wallet === wallet.wallet)
                 ].checked = e.target.checked;
                 setWallets(walletsTemp);
               }}

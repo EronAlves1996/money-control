@@ -3,15 +3,15 @@ import { MONTHS } from "./SelectMonths";
 export function MovimentationTable({ filters, data }) {
   const filteredData = data.filter((d) => {
     const wallet = filters.wallets.filter((w) => w.checked);
-    const year = filters.wallets.filter((y) => y.selected);
+    const year = filters.years.filter((y) => y.selected);
     const month = filters.months
       ? filters.months.filter((m) => m.selected)
       : null;
 
     return (
-      data.wallet === wallet &&
-      new Date(data.date).getFullYear() === year &&
-      MONTHS[new Date(data.date).getMonth()] === month
+      wallet.some((w) => d.wallet === w.wallet) &&
+      new Date(d.date).getFullYear() === year[0]?.year &&
+      (month ? MONTHS[new Date(d.date).getMonth()] === month[0]?.month : false)
     );
   });
   return (
@@ -28,7 +28,7 @@ export function MovimentationTable({ filters, data }) {
         <tbody>
           {filteredData.map((d) => (
             <tr key={d.date}>
-              <td>{d.date}</td>
+              <td>{new Date(d.date).toLocaleString()}</td>
               <td>{d.wallet}</td>
               <td>{d.description}</td>
               <td>{d.value}</td>

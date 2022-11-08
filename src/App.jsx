@@ -4,11 +4,11 @@ import { MovimentationTable } from "./MovimentationTable";
 import { SelectionOptions } from "./SelectionOptions";
 
 function parseWalletsAndYears(data) {
-  data.reduce(
+  return data.reduce(
     (acc, trans) => {
       const wallet = trans.wallet;
       const date = new Date(trans.date);
-      const year = date.getYear();
+      const year = date.getFullYear();
 
       if (!acc.wallets.some((w) => w === wallet)) {
         acc.wallets.push(wallet);
@@ -29,13 +29,18 @@ function Main() {
   const [wallets, setWallets] = useState([]);
   const [years, setYears] = useState([]);
   const [months, setMonths] = useState(null);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
 
   function parseFile(file) {
-    file.text().then((transactions) => setData(JSON.parse(transactions)));
+    file.text().then((transactions) => {
+      const data = JSON.parse(transactions);
+      setData(data);
+      setIsHaveFile(true);
+      parseData(data);
+    });
   }
 
-  if (data) {
+  function parseData(data) {
     const wAY = parseWalletsAndYears(data);
     setYears(
       wAY.years.map((year) => {
@@ -44,7 +49,7 @@ function Main() {
     );
     setWallets(
       wAY.wallets.map((wallet) => {
-        return { wallet, checked: false };
+        return { wallet, checked: true };
       })
     );
   }
@@ -86,7 +91,6 @@ function Main() {
                   id="file-upload"
                   data-testid="file-upload"
                   onChange={(e) => {
-                    setIsHaveFile(true);
                     parseFile(e.target.files[0]);
                   }}
                 />
