@@ -1,19 +1,19 @@
-function parseMonths(data, year) {
-  const MONTHS = [
-    "JAN",
-    "FEV",
-    "MAR",
-    "ABR",
-    "MAI",
-    "JUN",
-    "JUL",
-    "AGO",
-    "SET",
-    "OUT",
-    "NOV",
-    "DEZ",
-  ];
+export const MONTHS = [
+  "JAN",
+  "FEV",
+  "MAR",
+  "ABR",
+  "MAI",
+  "JUN",
+  "JUL",
+  "AGO",
+  "SET",
+  "OUT",
+  "NOV",
+  "DEZ",
+];
 
+function parseMonths(data, year) {
   const monthArr = data.reduce((acc, trans) => {
     const date = new Date(trans.date);
     if (date.getYear() !== year) return acc;

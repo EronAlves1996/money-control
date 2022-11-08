@@ -1,55 +1,7 @@
 import { useState } from "react";
 import "./App.css";
+import { MovimentationTable } from "./MovimentationTable";
 import { SelectionOptions } from "./SelectionOptions";
-
-function MovimentationTable() {
-  return (
-    <main>
-      <table>
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Conta</th>
-            <th>Descrição</th>
-            <th>Valor</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>10/10/2010</td>
-            <td>Banco do brasil</td>
-            <td>Bala Halls</td>
-            <td>R$ 2,00</td>
-          </tr>
-          <tr>
-            <td>10/10/2010</td>
-            <td>Banco do brasil</td>
-            <td>Bala Halls</td>
-            <td>R$ 2,00</td>
-          </tr>
-          <tr>
-            <td>10/10/2010</td>
-            <td>Banco do brasil</td>
-            <td>Bala Halls</td>
-            <td>R$ 2,00</td>
-          </tr>
-          <tr>
-            <td>10/10/2010</td>
-            <td>Banco do brasil</td>
-            <td>Bala Halls</td>
-            <td>R$ 2,00</td>
-          </tr>
-          <tr>
-            <td>10/10/2010</td>
-            <td>Banco do brasil</td>
-            <td>Bala Halls</td>
-            <td>R$ 2,00</td>
-          </tr>
-        </tbody>
-      </table>
-    </main>
-  );
-}
 
 function parseWalletsAndYears(data) {
   data.reduce(
@@ -85,8 +37,16 @@ function Main() {
 
   if (data) {
     const wAY = parseWalletsAndYears(data);
-    setYears(wAY.years);
-    setWallets(wAY.wallets);
+    setYears(
+      wAY.years.map((year) => {
+        return { year, selected: false };
+      })
+    );
+    setWallets(
+      wAY.wallets.map((wallet) => {
+        return { wallet, checked: false };
+      })
+    );
   }
 
   return (
@@ -103,9 +63,11 @@ function Main() {
             />
           </header>
           <MovimentationTable
-            wallets={wallets}
-            years={years}
-            months={months}
+            filters={{
+              wallets,
+              years,
+              months,
+            }}
             data={data}
           />
         </>
