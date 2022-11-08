@@ -48,7 +48,12 @@ export function SelectionOptions({ walletsOpts, yearOpts, monthOpts, data }) {
         wallets={walletsOpts.wallets}
         setWallets={walletsOpts.setWallets}
       />
-      <SelectYears years={yearOpts.years} setYears={yearOpts.setYears} />
+
+      {yearOpts.years ? <p>Parece que ainda não há dados carregados!</p> : null}
+
+      {yearOpts.years && yearOpts.years.length !== 1 ? (
+        <SelectYears years={yearOpts.years} setYears={yearOpts.setYears} />
+      ) : null}
 
       {monthOpts.months && monthOpts.months.length !== 1 ? (
         <SelectMonths

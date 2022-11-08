@@ -1,7 +1,7 @@
 export function SelectYears({ years, setYears }) {
-  const mapYears =
-    years && years.length > 1 ? (
-      years.map((year) => (
+  return (
+    <section className="years" role="region" key="1">
+      {years.map((year) => (
         <button
           onClick={() => {
             setYears(
@@ -16,17 +16,7 @@ export function SelectYears({ years, setYears }) {
         >
           {year.year}
         </button>
-      ))
-    ) : (
-      <p>
-        Você ainda não tem dados. Por favor, crie uma nova transação ou carregue
-        dados.
-      </p>
-    );
-
-  return !years || years.length !== 1 ? (
-    <section className="years" role="region" key="1">
-      {mapYears}
+      ))}
     </section>
-  ) : null;
+  );
 }
