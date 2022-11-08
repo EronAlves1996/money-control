@@ -45,7 +45,7 @@ describe("test SelectYears component", () => {
   });
 
   it("should render all years passed", () => {
-    render(<SelectYears years={[2022, 2023]} />);
+    render(<SelectYears years={[{ year: 2022 }, { year: 2023 }]} />);
     expect(screen.queryByRole("region")).toHaveTextContent("2022");
     expect(screen.queryByRole("region")).toHaveTextContent("2023");
   });
@@ -58,7 +58,10 @@ describe("test months component", () => {
 
       return (
         <>
-          <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
+          <SelectYears
+            years={[{ year: 2021 }, { year: 2022 }]}
+            setYears={setSelectedYear}
+          />
           <SelectMonths selectedYear={selectedYear} months={["JAN", "FEV"]} />
         </>
       );
@@ -76,7 +79,10 @@ describe("test months component", () => {
 
       return (
         <>
-          <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
+          <SelectYears
+            years={[{ year: 2021 }, { year: 2022 }]}
+            setYears={setSelectedYear}
+          />
           <SelectMonths selectedYear={selectedYear} months={["JAN", "FEV"]} />
         </>
       );
@@ -94,7 +100,10 @@ describe("test months component", () => {
 
       return (
         <>
-          <SelectYears years={["2021", "2022"]} selectYear={setSelectedYear} />
+          <SelectYears
+            years={[{ year: 2021 }, { year: 2022 }]}
+            setYears={setSelectedYear}
+          />
           <SelectMonths selectedYear={selectedYear} months={["JAN"]} />
         </>
       );

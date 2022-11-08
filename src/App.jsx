@@ -130,6 +130,7 @@ function Main() {
               walletsOpts={{ wallets, setWallets }}
               yearOpts={{ years, setYears }}
               monthOpts={{ months, setMonths }}
+              years={years}
             />
           </header>
           <MovimentationTable wallets={wallets} years={years} months={months} />

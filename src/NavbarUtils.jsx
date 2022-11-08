@@ -23,10 +23,25 @@ export function SelectWallets({ wallets, setWallets }) {
   } else return <></>;
 }
 
-export function SelectYears({ years, selectYear }) {
+export function SelectYears({ years, setYears }) {
   const mapYears =
     years && years.length > 1 ? (
-      years.map((year) => <a onClick={() => selectYear(year)}>{year}</a>)
+      years.map((year) => (
+        <a
+          onClick={() => {
+            setYears(
+              years.map((years) =>
+                years.year === year.year
+                  ? { ...year, selected: true }
+                  : { ...years, selected: false }
+              )
+            );
+          }}
+          key={years.year}
+        >
+          {year.year}
+        </a>
+      ))
     ) : (
       <p>
         Você ainda não tem dados. Por favor, crie uma nova transação ou carregue
@@ -51,14 +66,14 @@ export function SelectMonths({ selectedYear, months }) {
   ) : null;
 }
 
-export function SelectionOptions({ walletsOpts }) {
+export function SelectionOptions({ walletsOpts, yearOpts }) {
   return (
     <nav>
       <SelectWallets
         wallets={walletsOpts.wallets}
         setWallets={walletsOpts.setWallets}
       />
-      <SelectYears />
+      <SelectYears years={yearOpts.years} setYears={yearOpts.setYears} />
       <selectedYear />
     </nav>
   );
