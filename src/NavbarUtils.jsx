@@ -23,7 +23,7 @@ export function SelectWallets({ wallets, setWallets }) {
   } else return <></>;
 }
 
-export function SelectYears({ years, setYears }) {
+export function SelectYears({ years, setYears, setMonths }) {
   const mapYears =
     years && years.length > 1 ? (
       years.map((year) => (
@@ -36,6 +36,7 @@ export function SelectYears({ years, setYears }) {
                   : { ...years, selected: false }
               )
             );
+            setMonths({});
           }}
           key={years.year}
         >
@@ -56,28 +57,86 @@ export function SelectYears({ years, setYears }) {
   ) : null;
 }
 
-export function SelectMonths({ selectedYear, months }) {
-  return selectedYear && months.length > 1 ? (
-    <section className="months">
-      {months.map((month) => (
-        <a>{month}</a>
-      ))}
-    </section>
-  ) : null;
+function parseMonths(data, year) {
+  const MONTHS = [
+    "JAN",
+    "FEV",
+    "MAR",
+    "ABR",
+    "MAI",
+    "JUN",
+    "JUL",
+    "AGO",
+    "SET",
+    "OUT",
+    "NOV",
+    "DEZ",
+  ];
+
+  const monthArr = data.reduce((acc, trans) => {
+    const date = new Date(trans.date);
+    if (date.getYear() !== year) return acc;
+
+    if (!acc.some((month) => month === MONTHS[date.getMonth()]))
+      acc.push(MONTHS[date.getMonth()]);
+
+    return acc;
+  }, []);
+  return monthArr.map((month) => {
+    return { month, selected: false };
+  });
 }
 
-export function SelectionOptions({ walletsOpts, yearOpts, monthOpts }) {
+export function SelectMonths({ years, months, setMonths, data }) {
+  if (!years.some((year) => year.selected === false)) {
+    return null;
+  }
+
+  const year = years.find((year) => year.selected === true);
+  const parsedMonths = parseMonths(data, year);
+
+  if (!months) {
+    setMonths(parsedMonths);
+  }
+
+  return (
+    <section className="months" role="region">
+      {parsedMonths.map((month) => (
+        <a
+          onClick={() => {
+            setMonths(
+              parsedMonths.map((m) => {
+                if (m.month === month.month)
+                  return { ...month, selected: true };
+                return { ...month, selected: false };
+              })
+            );
+          }}
+        >
+          month.month
+        </a>
+      ))}
+    </section>
+  );
+}
+
+export function SelectionOptions({ walletsOpts, yearOpts, monthOpts, data }) {
   return (
     <nav>
       <SelectWallets
         wallets={walletsOpts.wallets}
         setWallets={walletsOpts.setWallets}
       />
-      <SelectYears years={yearOpts.years} setYears={yearOpts.setYears} />
-      <selectedYear
+      <SelectYears
+        years={yearOpts.years}
+        setYears={yearOpts.setYears}
+        setMonths={monthOpts.setMonthts}
+      />
+      <SelectMonths
         years={yearOpts.years}
         months={monthOpts.months}
         setMonths={monthOpts.setMonths}
+        data={data}
       />
     </nav>
   );

@@ -98,6 +98,7 @@ function Main() {
             <SelectionOptions
               walletsOpts={{ wallets, setWallets }}
               yearOpts={{ years, setYears }}
+              monthOpts={{ months, setMonths }}
               data={data}
             />
           </header>
