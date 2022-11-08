@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import { SelectMonths } from "./SelectMonths";
 import { SelectWallets } from "./SelectWallets";
-import { SelectYears } from "./SelectYears";
 
 export const MONTHS = [
   "JAN",
@@ -51,16 +49,46 @@ export function SelectionOptions({ walletsOpts, yearOpts, monthOpts, data }) {
 
       {yearOpts.years ? <p>Parece que ainda não há dados carregados!</p> : null}
 
-      {yearOpts.years && yearOpts.years.length !== 1 ? (
-        <SelectYears years={yearOpts.years} setYears={yearOpts.setYears} />
-      ) : null}
+      <SelectXWValidation opts={yearOpts} />
 
-      {monthOpts.months && monthOpts.months.length !== 1 ? (
-        <SelectMonths
-          months={monthOpts.months}
-          setMonths={monthOpts.setMonths}
-        />
-      ) : null}
+      <SelectXWValidation opts={monthOpts} />
     </nav>
+  );
+}
+
+function SelectXWValidation({ opts }) {
+  const attr = Object.keys(opts).at(0);
+
+  return opts[attr] && opts[attr].length !== 1 ? (
+    <SelectX
+      subject={opts[Object.keys(opts).at(0)]}
+      setSubject={opts[Object.keys(opts).at(1)]}
+    />
+  ) : null;
+}
+
+function SelectX({ subject, setSubject }) {
+  const attr = Object.keys(subject[0]).at(0);
+  console.log(subject);
+
+  return (
+    <section className={attr} role="region" key="1">
+      {subject.map((s) => (
+        <button
+          onClick={() => {
+            setSubject(
+              subject.map((sub) =>
+                sub[attr] === s[attr]
+                  ? { ...sub, selected: true }
+                  : { ...sub, selected: false }
+              )
+            );
+          }}
+          key={s[attr].toString()}
+        >
+          {s[attr]}
+        </button>
+      ))}
+    </section>
   );
 }
